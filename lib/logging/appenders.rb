@@ -5,12 +5,13 @@ module Logging
     # Register a new appender from outside the core logging appenders
     # Ex: You could replace the email appender factory with:
     #     Logging::Appenders.register_appender('Email')   
-    def register_appender(klazz)
+    def register_appender(klazz, factory_method_name = nil)
+      factory_method_name ||= klazz.downcase
+      klazz = ::Logging::Appenders.const_get(klazz) if klazz.is_a?(String)
       module_eval %Q{
-      def #{klazz.downcase}(*args)
-        k = ::Logging::Appenders.const_get("#{klazz}")
-        return k if args.empty?
-        k.new(*args)
+      def #{factory_method_name}(*args)
+        return #{klazz} if args.empty?
+        #{klazz}.new(*args)
       end
       }
     end

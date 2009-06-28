@@ -159,8 +159,8 @@ module Logging
 
     # Register a new appender from a plugin gem for instance
     #
-    def register_appender(klazz)
-      ::Logging::Appenders.register_appender(klazz)
+    def register_appender(klazz, factory_method_name = nil)
+      ::Logging::Appenders.register_appender(klazz, factory_method_name)
     end
 
     # Access to the appenders.
