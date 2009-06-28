@@ -2,13 +2,26 @@
 module Logging
   module Appenders
 
+    # Register a new appender from outside the core logging appenders
+    # Ex: You could replace the email appender factory with:
+    #     Logging::Appenders.register_appender('Email')   
+    def register_appender(klazz)
+      module_eval %Q{
+      def #{klazz.downcase}(*args)
+        k = ::Logging::Appenders.const_get("#{klazz}")
+        return k if args.empty?
+        k.new(*args)
+      end
+      }
+    end
+
     # Accessor / Factory for the Email appender.
     #
     def email( *args )
-      return ::Logging::Appenders::Email if args.empty?
-      ::Logging::Appenders::Email.new(*args)
+          return ::Logging::Appenders::Email if args.empty?
+          ::Logging::Appenders::Email.new(*args)
     end
-
+    
     # Accessor / Factory for the File appender.
     #
     def file( *args )

@@ -157,6 +157,12 @@ module Logging
       ::Logging::Layouts
     end
 
+    # Register a new appender from a plugin gem for instance
+    #
+    def register_appender(klazz)
+      ::Logging::Appenders.register_appender(klazz)
+    end
+
     # Access to the appenders.
     #
     def appenders
